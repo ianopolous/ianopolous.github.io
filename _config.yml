@@ -1,0 +1,10 @@
+# Site settings
+title: Beautiful bytecodes
+email: ianopolous@gmail.com
+description: "Interesting stuff in virtual machines, distributed systems, compilers and privacy."
+baseurl: ""
+url: "http://ianopolous.github.io"
+
+# Build settings
+markdown: kramdown
+permalink: pretty
