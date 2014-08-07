@@ -20,13 +20,13 @@ someDiv.innerHTML = newHTML;
 
 Looks innocuous right? I dug a little deeper and discovered that the slow calls were only when the existing html in the div was large (~6M characters). The new html could be trivially small, and still the call was taking 1 minute. The existing html had a large number of elements with their onclick function set to some function on the document. It seemed like Chrome was taking a long time removing the exisiting elements from the div. I tried out an alternative to directly setting innerHTML.
 {% highlight js %}
-function (oldDiv, html) {
+function replaceInnerHTML(oldDiv, html) {
     var newDiv = oldDiv.cloneNode(false);
     newDiv.innerHTML = html;
     oldDiv.parentNode.replaceChild(newDiv, oldDiv);
 };
 {% endhighlight %}
-This was just as fast as the direct method for setting a large html value, but up to 3000 times faster subsequently setting the html to something else! You can try it out below. The time taken to replace the contents of a div directly using innerHTML increases with the number of child elements currently in the div. The ratio shows just how much faster my method is. In Chrome I've seen it vary from 4 to 3000X faster, and up to 600X faster in Firefox. 
+The original node is cloned to preserve all its properties except for it child nodes. Then we set the new node's innerHTML and replace references to the old node in its parent with the new node. This was just as fast as the direct method for setting a large html value, but up to 3000 times faster subsequently setting the html to something else! You can try it out below. The time taken to replace the contents of a div directly using innerHTML increases with the number of child elements currently in the div. The ratio shows just how much faster my method is. In Chrome I've seen it vary from 4 to 3000X faster, and up to 600X faster in Firefox. 
 <br>
 <br>Current large html size (characters): <span id="size">0</span>
 
